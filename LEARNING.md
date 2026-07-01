@@ -19,3 +19,10 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 
 - No built-in Angular primitive for cross-request server-side TTL caching: `resource()`/`httpResource()` are component-bound reactive fetchers (re-run on signal/param change, no TTL); `withHttpTransferCache` only dedupes SSR↔browser requests within a single render, not across separate incoming requests.
 - Used the standard RxJS pattern instead: `shareReplay(1)` on the `HttpClient` observable, gated by a manually tracked `expiresAt` timestamp.
+
+## Step 14 — `rain-verdict.component.ts`, `mm.pipe.ts`
+
+- `input.required<T>()` for a presentational component's single data-in — no defaults, compile-time enforced.
+- `computed()` derives the verdict label text from the input signal instead of a template `@if`/`@else` pair.
+- Standalone `Pipe` (`MmPipe`) for the reusable `"X.X mm"` formatting, per the project's `shared/pipes/` convention — kept separate from the component so other features (location-picker, later) can reuse it.
+- Verified manually via temporary mock wiring in `app.ts`/`app.html` + `ng serve`, since nothing routes to this component until step 15 (city-page).
