@@ -160,7 +160,7 @@ v1 is functionally complete but visually bare (unstyled, left-aligned, no dark m
 - [x] 26. Define "Kindle paper" design tokens (CSS custom properties for light + dark via `prefers-color-scheme`: background, ink/text color, accent, border, serif font stack, spacing scale) in `styles.scss`.
 - [x] 27. Centered reading-width layout: wrap route content in a consistent max-width centered container, applied globally (`app.html`/`app.scss`).
 - [x] 28. Restyle `rain-verdict.component` with the new design tokens (typography, spacing, borders).
-- [ ] 29. Restyle `location-picker.component` (button, search input, results list) with the new design tokens.
+- [x] 29. Restyle `location-picker.component` (button, search input, results list) with the new design tokens.
 - [ ] 30. Add a shared `precip-icon` component with no-precip/light/heavy variants driven by `Station.statusCode`, wired into `rain-verdict.component`.
 - [ ] 31. Extend `RainReport` model + `RainReportService` with `lastHourPrecip`, `dailyPrecip`, 6h and 12h sums.
 - [ ] 32. Display the precipitation breakdown (from step 31) in `rain-verdict.component`.

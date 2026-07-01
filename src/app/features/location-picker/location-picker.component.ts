@@ -29,7 +29,12 @@ const ERROR_MESSAGES: Record<LocationErrorKind, string> = {
   imports: [RainVerdictComponent],
   template: `
     <div class="location-picker">
-      <button type="button" (click)="useMyLocation()" [disabled]="status() === 'loading'">
+      <button
+        type="button"
+        class="location-picker__gps-button"
+        (click)="useMyLocation()"
+        [disabled]="status() === 'loading'"
+      >
         Użyj mojej lokalizacji
       </button>
 
@@ -45,15 +50,21 @@ const ERROR_MESSAGES: Record<LocationErrorKind, string> = {
         />
 
         @if (searchResults.isLoading()) {
-          <p>Szukanie…</p>
+          <p class="location-picker__hint">Szukanie…</p>
         } @else if (searchResults.error()) {
-          <p role="alert">Nie udało się wyszukać stacji. Spróbuj ponownie.</p>
+          <p class="location-picker__hint" role="alert">
+            Nie udało się wyszukać stacji. Spróbuj ponownie.
+          </p>
         } @else if (searchResults.value(); as results) {
           @if (results.length > 0) {
             <ul class="location-picker__results">
               @for (station of results; track station.code) {
                 <li>
-                  <button type="button" (click)="selectStation(station.code)">
+                  <button
+                    type="button"
+                    class="location-picker__result"
+                    (click)="selectStation(station.code)"
+                  >
                     {{ station.name }}
                   </button>
                 </li>
@@ -65,10 +76,10 @@ const ERROR_MESSAGES: Record<LocationErrorKind, string> = {
 
       @switch (status()) {
         @case ('loading') {
-          <p>Szukanie najbliższej stacji…</p>
+          <p class="location-picker__hint">Szukanie najbliższej stacji…</p>
         }
         @case ('error') {
-          <p role="alert">{{ errorMessage() }}</p>
+          <p class="location-picker__hint" role="alert">{{ errorMessage() }}</p>
         }
         @case ('success') {
           @if (result(); as result) {
@@ -78,6 +89,7 @@ const ERROR_MESSAGES: Record<LocationErrorKind, string> = {
       }
     </div>
   `,
+  styleUrl: './location-picker.component.scss',
 })
 export class LocationPickerComponent {
   private readonly geolocation = inject(GeolocationService);
