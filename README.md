@@ -1,0 +1,3 @@
+# czypadalo
+
+Aplikacja Angular.
