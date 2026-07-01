@@ -103,7 +103,7 @@ Each step below is presented to the user for acceptance before being implemented
 - [x] 5. Add husky + lint-staged pre-commit hook running ESLint + Prettier on staged files.
 - [x] 6. Add commitlint (husky `commit-msg` hook) enforcing the commit message convention from `CLAUDE.md`.
 - [x] 7. Define TS models (`station.model.ts`, `rain-report.model.ts`) from a real sample response of `/list/meteo` and the `data` endpoint.
-- [ ] 8. `imgw-api.service.ts`: `getStations()` method only (no cache yet), called server-side.
+- [x] 8. `imgw-api.service.ts`: `getStations()` method only (no cache yet), called server-side.
 - [ ] 9. Add in-memory TTL cache to `getStations()` (~1h TTL).
 - [ ] 10. `imgw-api.service.ts`: `getStationHistory(code, hoursInterval)` method, no cache yet.
 - [ ] 11. Add in-memory TTL cache to `getStationHistory` (~5-10 min TTL).
