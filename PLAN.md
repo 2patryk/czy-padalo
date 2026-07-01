@@ -6,6 +6,10 @@ A website (Angular, SSR) that, for a given location, answers: **did it rain in t
 
 Key decisions reached during design review, most-recent first (see `git log` on this file for how the plan evolved):
 
+- **v2 design direction: "Kindle Paperwhite" e-ink aesthetic.** Warm off-white/cream background, near-black high-contrast text, serif typography, subtle borders instead of shadows, centered reading-width column. See "v2: Design overhaul & richer info" below.
+- **v2 icons stay precipitation-only.** No new weather data source (e.g. Open-Meteo) for sun/cloud/temperature — icons are simple mm-threshold-driven variants (no rain / light rain / heavy rain), reusing the real `statusCode` field already present in `Station` from `/list/meteo`. Keeps `ImgwApiService` as the single external data source.
+- **v2 dark mode is system-driven only, no manual toggle.** Follows `prefers-color-scheme`; no UI switch, no persisted preference.
+- **v2 "more info" = precipitation breakdown + hourly trend.** Show `lastHourPrecip`/`dailyPrecip`/6h/12h sums alongside the 24h total (all already fetched, just unused past `precip24HoursSum`), and add an hourly history view using `ImgwApiService.getStationHistory` (built in v1 step 11 but never wired into any UI).
 - **Explicit `api/index.mjs` + `vercel.json` required for Angular SSR on Vercel (2026-07-01).** Vercel's zero-config Angular integration let filesystem routing serve the static `index.html` shell for every path before the SSR server ever ran (a known upstream issue, angular/angular-cli#30736) — all dynamic routes and `/api/stations` were silently broken in production despite working perfectly locally. Fixed by adding a Vercel Function (`api/index.mjs`) wrapping the compiled `server.mjs` `reqHandler`, with `vercel.json` rewrites forcing every request through it.
 - **`security.allowedHosts` in `angular.json` must list the production Vercel host(s).** Angular's SSR host-header validation (SSRF protection) rejects any `Host` header not explicitly allowlisted, and defaults to an empty array (deny all) — this broke every request once the SSR fix above was deployed, with a distinct error ("Header host ... is not allowed"). Allowlisted `czy-padalo.vercel.app` and `*.patrykordons-projects.vercel.app`.
 - **Vercel project is Git-connected (2026-07-01)**, replacing the manual `vercel deploy` used for the step-3 skeleton check. Every push to `main` now auto-deploys to production; other branches/PRs get preview deployments. This makes step 25 a verification step rather than a manual deploy.
@@ -129,3 +133,42 @@ Each step below is presented to the user for acceptance before being implemented
 
 - The API is unofficial — a contract change could break the app silently; isolate all calls in `ImgwApiService`.
 - `hoursInterval` reach needs verification before the (deferred) week feature is built.
+
+---
+
+## v2: Design overhaul & richer info
+
+v1 is functionally complete but visually bare (unstyled, left-aligned, no dark mode, minimal information). v2 focuses purely on design and information density — no new data sources, no new pages.
+
+### Scope (v2)
+
+- **"Kindle Paperwhite" visual design**: warm paper-like background, high-contrast near-black ink text, serif typography, subtle borders (no drop shadows), generous whitespace, centered reading-width column on every page.
+- **Dark mode** via `prefers-color-scheme`, no manual toggle — an inverted "night e-ink" palette (near-black background, warm off-white text), same typography and layout.
+- **Simple precipitation icons** (no rain / light rain / heavy rain) driven by the real `statusCode` field already returned by `/list/meteo`, shown next to the verdict on both city pages and the GPS/search result.
+- **Precipitation breakdown**: show `lastHourPrecip`, `dailyPrecip`, and the 6h/12h sums alongside the existing 24h total.
+- **Hourly precipitation history**: a simple list (not a chart library) of the last 24h using the existing `getStationHistory` endpoint, shown on both city pages and the GPS/search result.
+
+### Out of scope for v2
+
+- Any new external weather data source (sun/cloud/temperature icons).
+- Manual dark-mode toggle or persisted theme preference.
+- Chart library / visualization — history is a plain list.
+- Week view, sitemap, remaining out-of-scope-for-v1 items (still deferred).
+
+### Implementation steps
+
+- [ ] 26. Define "Kindle paper" design tokens (CSS custom properties for light + dark via `prefers-color-scheme`: background, ink/text color, accent, border, serif font stack, spacing scale) in `styles.scss`.
+- [ ] 27. Centered reading-width layout: wrap route content in a consistent max-width centered container, applied globally (`app.html`/`app.scss`).
+- [ ] 28. Restyle `rain-verdict.component` with the new design tokens (typography, spacing, borders).
+- [ ] 29. Restyle `location-picker.component` (button, search input, results list) with the new design tokens.
+- [ ] 30. Add a shared `precip-icon` component with no-precip/light/heavy variants driven by `Station.statusCode`, wired into `rain-verdict.component`.
+- [ ] 31. Extend `RainReport` model + `RainReportService` with `lastHourPrecip`, `dailyPrecip`, 6h and 12h sums.
+- [ ] 32. Display the precipitation breakdown (from step 31) in `rain-verdict.component`.
+- [ ] 33. Add `precip-history.component` rendering the last 24h hourly breakdown as a plain list, using the existing (currently unused) `ImgwApiService.getStationHistory`.
+- [ ] 34. Wire `precip-history.component` into `city-page.component` and the GPS/search result in `location-picker.component`.
+- [ ] 35. Verify dark mode end-to-end (both themes, every page/component) and check WCAG AA contrast + icon accessibility (ARIA labels).
+
+## Risks (v2)
+
+- `statusCode` categories (`no-precip`, `precip`, `high-precip`, `no-precip-data`, `no-hours-precip-data`) don't map 1:1 to a clean 3-icon scheme — the two "no data" variants need a deliberate fallback icon, not just an error state.
+- `getStationHistory`'s real backward reach for `hoursInterval` was never verified (see top-level Risks) — step 33 should confirm 24h actually returns 24 distinct hourly entries before building the list UI around it.
