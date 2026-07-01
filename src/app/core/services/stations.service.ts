@@ -14,7 +14,7 @@ function foldDiacritics(value: string): string {
 const EARTH_RADIUS_KM = 6371;
 
 /** Great-circle distance between two coordinates, in kilometers. */
-function haversineDistanceKm(a: Coordinates, b: Coordinates): number {
+export function haversineDistanceKm(a: Coordinates, b: Coordinates): number {
   const lat1 = (a.latitude * Math.PI) / 180;
   const lat2 = (b.latitude * Math.PI) / 180;
   const dLat = ((b.latitude - a.latitude) * Math.PI) / 180;

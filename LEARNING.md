@@ -86,3 +86,10 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - Each RxJS stage in the GPS chain (`getCurrentPosition`, `findNearestStation`, `getRainReport`) gets its own `catchError` that sets the specific `errorKind` before falling back to `of(null)`/`of(coords)`, so a failure at any step reports accurately instead of collapsing into one generic message.
 - `resource()`'s built-in `isLoading()`/`error()` signals cover the search box's own loading/error UI for free — no extra state needed there, unlike the manually-driven GPS flow.
 - Verified live: mocking `GeolocationPositionError.code` 1 vs. 2 produces two distinct, correctly-worded messages in the browser (permission text vs. generic unavailable text).
+
+## Step 24 — Vitest unit tests for pure logic
+
+- `provideHttpClientTesting()` + `HttpTestingController` (Angular's standard HTTP testing setup) works unmodified under the CLI's Vitest builder — no Angular-specific test config needed beyond the usual `TestBed.configureTestingModule`.
+- `vi.useFakeTimers()` + `vi.advanceTimersByTime()` (Vitest globals, no import needed) verified the TTL cache actually expires and re-fetches — this is the one test that wouldn't have caught a real regression the other 9 wouldn't (e.g. a `>=` vs `>` off-by-one in the `expiresAt` check).
+- Added `formatLocalTime()` (`shared/utils/format-local-time.ts`) purely to give the plan's "UTC→local time conversion" test item something real to test — no UI consumes it yet, since nothing currently renders a timestamp. `Intl.DateTimeFormat` with `timeZone: 'Europe/Warsaw'` correctly resolves both CET (UTC+1, winter) and CEST (UTC+2, summer DST) without a date library.
+- Exported `haversineDistanceKm` from `stations.service.ts` (previously module-private) purely so it's independently testable — asserted it reproduces the real-world Warszawa↔Kraków distance (~252 km) rather than just checking internal consistency.
