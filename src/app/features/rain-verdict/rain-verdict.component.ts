@@ -2,12 +2,15 @@ import { DecimalPipe } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 import { RainReport } from '../../core/models/rain-report.model';
 import { MmPipe } from '../../shared/pipes/mm.pipe';
+import { PrecipIconComponent } from '../../shared/precip-icon/precip-icon.component';
+import { toPrecipIconVariant } from '../../shared/utils/precip-icon-variant';
 
 @Component({
   selector: 'app-rain-verdict',
-  imports: [MmPipe, DecimalPipe],
+  imports: [MmPipe, DecimalPipe, PrecipIconComponent],
   template: `
     <div class="verdict" role="status">
+      <app-precip-icon class="verdict__icon" [variant]="iconVariant()" />
       <p class="verdict__label" [class.verdict__label--rain]="report().didRain">
         {{ verdictText() }}
       </p>
@@ -26,5 +29,8 @@ export class RainVerdictComponent {
 
   protected readonly verdictText = computed(() =>
     this.report().didRain ? 'Padało' : 'Nie padało',
+  );
+  protected readonly iconVariant = computed(() =>
+    toPrecipIconVariant(this.report().mm, this.report().hasData),
   );
 }

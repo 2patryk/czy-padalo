@@ -4,4 +4,6 @@ export interface RainReport {
   stationName: string;
   didRain: boolean;
   mm: number;
+  /** `false` if the station's `precip24HoursSum` was `null` (no reading, not necessarily no rain). */
+  hasData: boolean;
 }

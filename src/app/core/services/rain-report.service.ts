@@ -22,6 +22,7 @@ export class RainReportService {
           stationName: station.name,
           didRain: mm > 0,
           mm,
+          hasData: station.precip24HoursSum !== null,
         };
       }),
     );
