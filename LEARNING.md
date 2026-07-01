@@ -39,3 +39,9 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - `ResolveFn` can return a `RedirectCommand` (built via `Router.parseUrl()`) instead of resolved data — the router navigates there and never activates the route, so `CityPageComponent` never has to handle a "not found" state itself.
 - Applied the same `RedirectCommand` fallback when a valid slug's station has no matching data (`RainReportService.getRainReport` returns `null`), since both cases have the same "nothing to show" outcome — kept the component's `report` input as a plain, non-nullable `RainReport`.
 - Verified via `ng serve`: `/warszawa` → 200, `/nonexistent-city` → 302 to `/`.
+
+## Step 17 — dynamic `Title`/`Meta` tags
+
+- Injected `Title`/`Meta` (`@angular/platform-browser`) in `CityPageComponent`'s constructor, but did the actual `setTitle`/`updateTag` calls inside an `effect()` rather than the constructor body — signal inputs (`report`, `citySlug`) aren't guaranteed to have a value yet when the constructor runs, and `effect()` re-runs automatically if the resolved data changes for a reused route instance.
+- `citySlug` is a plain `input.required<string>()` bound automatically from the `:citySlug` route param via `withComponentInputBinding()` (added in step 15) — no manual `ActivatedRoute` read needed.
+- Verified via `ng serve` + `curl` on `/lodz`: real `<title>` and `<meta name="description">` reflecting the live verdict.

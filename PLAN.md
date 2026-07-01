@@ -112,7 +112,7 @@ Each step below is presented to the user for acceptance before being implemented
 - [x] 14. `rain-verdict.component.ts`: presentational component rendering the verdict (yes/no + mm + station name), no real data yet (static/mock input).
 - [x] 15. `city-page.component.ts` + `/:citySlug` route wiring: server-rendered, uses `rain-report.service.ts` + `rain-verdict.component.ts` for a real city.
 - [x] 16. Unknown-slug redirect to `/`.
-- [ ] 17. Dynamic `Title`/`Meta` tags on the city page (title + description built from the real verdict).
+- [x] 17. Dynamic `Title`/`Meta` tags on the city page (title + description built from the real verdict).
 - [ ] 18. Fill in the rest of the initial city list (~20-30 cities total).
 - [ ] 19. `geolocation.service.ts` wrapping `navigator.geolocation.getCurrentPosition`, with permission-denial handling.
 - [ ] 20. Haversine nearest-station lookup in `stations.service.ts`.
