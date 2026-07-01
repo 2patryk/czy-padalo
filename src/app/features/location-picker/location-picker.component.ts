@@ -1,5 +1,6 @@
-import { Component, inject, resource, signal } from '@angular/core';
+import { Component, computed, inject, resource, signal } from '@angular/core';
 import { catchError, firstValueFrom, map, of, switchMap } from 'rxjs';
+import { GeolocationError } from '../../core/models/geolocation.model';
 import { RainReport } from '../../core/models/rain-report.model';
 import { GeolocationService } from '../../core/services/geolocation.service';
 import { RainReportService } from '../../core/services/rain-report.service';
@@ -7,11 +8,21 @@ import { StationsService } from '../../core/services/stations.service';
 import { RainVerdictComponent } from '../rain-verdict/rain-verdict.component';
 
 type LocationPickerStatus = 'idle' | 'loading' | 'error' | 'success';
+type LocationErrorKind = 'gps-denied' | 'gps-unavailable' | 'network' | 'no-data';
 
 interface LocationResult {
   report: RainReport;
   distanceKm: number | null;
 }
+
+const ERROR_MESSAGES: Record<LocationErrorKind, string> = {
+  'gps-denied':
+    'Odmówiono dostępu do lokalizacji. Włącz uprawnienia w przeglądarce albo wyszukaj stację ręcznie.',
+  'gps-unavailable':
+    'Nie udało się ustalić lokalizacji. Spróbuj ponownie lub wyszukaj stację ręcznie.',
+  network: 'Wystąpił błąd połączenia. Spróbuj ponownie za chwilę.',
+  'no-data': 'Brak danych opadowych dla najbliższej stacji.',
+};
 
 @Component({
   selector: 'app-location-picker',
@@ -33,7 +44,11 @@ interface LocationResult {
           placeholder="np. Warszawa"
         />
 
-        @if (searchResults.value(); as results) {
+        @if (searchResults.isLoading()) {
+          <p>Szukanie…</p>
+        } @else if (searchResults.error()) {
+          <p role="alert">Nie udało się wyszukać stacji. Spróbuj ponownie.</p>
+        } @else if (searchResults.value(); as results) {
           @if (results.length > 0) {
             <ul class="location-picker__results">
               @for (station of results; track station.code) {
@@ -53,7 +68,7 @@ interface LocationResult {
           <p>Szukanie najbliższej stacji…</p>
         }
         @case ('error') {
-          <p role="alert">Nie udało się ustalić lokalizacji.</p>
+          <p role="alert">{{ errorMessage() }}</p>
         }
         @case ('success') {
           @if (result(); as result) {
@@ -71,6 +86,11 @@ export class LocationPickerComponent {
 
   protected readonly status = signal<LocationPickerStatus>('idle');
   protected readonly result = signal<LocationResult | null>(null);
+  protected readonly errorKind = signal<LocationErrorKind | null>(null);
+  protected readonly errorMessage = computed(() => {
+    const kind = this.errorKind();
+    return kind ? ERROR_MESSAGES[kind] : ERROR_MESSAGES['no-data'];
+  });
 
   protected readonly searchQuery = signal('');
   protected readonly searchResults = resource({
@@ -81,21 +101,40 @@ export class LocationPickerComponent {
   useMyLocation(): void {
     this.status.set('loading');
     this.result.set(null);
+    this.errorKind.set(null);
 
     this.geolocation
       .getCurrentPosition()
       .pipe(
-        switchMap((coords) => this.stations.findNearestStation(coords)),
+        catchError((error: GeolocationError) => {
+          this.errorKind.set(error.type === 'permission-denied' ? 'gps-denied' : 'gps-unavailable');
+          return of(null);
+        }),
+        switchMap((coords) => {
+          if (!coords) {
+            return of(null);
+          }
+
+          return this.stations.findNearestStation(coords).pipe(
+            catchError(() => {
+              this.errorKind.set('network');
+              return of(null);
+            }),
+          );
+        }),
         switchMap((nearest) => {
           if (!nearest) {
             return of(null);
           }
 
-          return this.rainReport
-            .getRainReport(nearest.station.code)
-            .pipe(map((report) => (report ? { report, distanceKm: nearest.distanceKm } : null)));
+          return this.rainReport.getRainReport(nearest.station.code).pipe(
+            map((report) => (report ? { report, distanceKm: nearest.distanceKm } : null)),
+            catchError(() => {
+              this.errorKind.set('network');
+              return of(null);
+            }),
+          );
         }),
-        catchError(() => of(null)),
       )
       .subscribe((result) => {
         this.result.set(result);
@@ -106,12 +145,16 @@ export class LocationPickerComponent {
   selectStation(code: string): void {
     this.status.set('loading');
     this.result.set(null);
+    this.errorKind.set(null);
 
     this.rainReport
       .getRainReport(code)
       .pipe(
         map((report) => (report ? { report, distanceKm: null } : null)),
-        catchError(() => of(null)),
+        catchError(() => {
+          this.errorKind.set('network');
+          return of(null);
+        }),
       )
       .subscribe((result) => {
         this.result.set(result);

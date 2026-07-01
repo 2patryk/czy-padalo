@@ -79,3 +79,10 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - `ImgwApiService.getStations()` now branches on `isPlatformBrowser`: server-side render still hits the real IMGW URL with headers (unchanged), browser-side hits `/api/stations` instead. `RainReportService` and `StationsService` needed zero changes — they only ever called `getStations()`, so the proxying is fully transparent to the rest of the app.
 - `resource()` (not a manual subscription) drives the search box: `params: () => this.searchQuery()` re-runs the loader on every keystroke, but since `ImgwApiService`'s `shareReplay(1)` cache means only the _first_ keystroke triggers a real HTTP call — every later filter is synchronous over the cached list.
 - Found and fixed a real bug via manual browser testing: naive `.toLowerCase().includes()` matching failed on diacritics (typing "Gdansk" didn't match "GDAŃSK"). Fixed with `String.prototype.normalize('NFD')` + stripping the `\p{Diacritic}` Unicode property before comparing, applied to both the query and station names in `StationsService.searchByName`.
+
+## Step 23 — error/loading states
+
+- Replaced the single generic `'error'` status with a separate `errorKind` signal (`'gps-denied' | 'gps-unavailable' | 'network' | 'no-data'`) plus a `computed()` message lookup — `status` still drives which template branch renders, `errorKind` only decides the wording within the error branch.
+- Each RxJS stage in the GPS chain (`getCurrentPosition`, `findNearestStation`, `getRainReport`) gets its own `catchError` that sets the specific `errorKind` before falling back to `of(null)`/`of(coords)`, so a failure at any step reports accurately instead of collapsing into one generic message.
+- `resource()`'s built-in `isLoading()`/`error()` signals cover the search box's own loading/error UI for free — no extra state needed there, unlike the manually-driven GPS flow.
+- Verified live: mocking `GeolocationPositionError.code` 1 vs. 2 produces two distinct, correctly-worded messages in the browser (permission text vs. generic unavailable text).
