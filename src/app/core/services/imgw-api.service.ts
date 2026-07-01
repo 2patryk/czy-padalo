@@ -1,9 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { Observable, shareReplay } from 'rxjs';
-import { Station } from '../models/station.model';
+import { Station, StationHistory } from '../models/station.model';
 
 const STATIONS_URL = 'https://hydro-back.imgw.pl/list/meteo';
+const STATION_DATA_URL = 'https://hydro-back.imgw.pl/station/meteo/data';
 const STATIONS_CACHE_TTL_MS = 60 * 60 * 1000;
 
 /**
@@ -31,5 +32,11 @@ export class ImgwApiService {
       .pipe(shareReplay(1));
     this.stationsCache = { data$, expiresAt: now + STATIONS_CACHE_TTL_MS };
     return data$;
+  }
+
+  /** `code` is the station's `code` field, not `id` — see PLAN.md gotchas. */
+  getStationHistory(code: string, hoursInterval: number): Observable<StationHistory> {
+    const params = new HttpParams().set('id', code).set('hoursInterval', hoursInterval);
+    return this.http.get<StationHistory>(STATION_DATA_URL, { headers: IMGW_HEADERS, params });
   }
 }
