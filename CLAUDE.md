@@ -7,6 +7,12 @@ Angular app — see `PLAN.md` for the full project plan.
 - Project documentation (`PLAN.md`, `CLAUDE.md`, and any other markdown docs added to this repo), code, comments, and commit messages must be in English, even if the conversation with the user is in another language.
 - All user-facing UI text (labels, verdicts, error messages, button copy) must be in Polish — this is a Polish-audience app.
 
+## Commit message convention
+
+- Format: `<type>: <lowercase summary>` — e.g. `feat: add rain verdict component`.
+- Common types: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`.
+- Summary is lowercase, in English, imperative mood, no trailing period.
+
 ## Working through the plan
 
 - `PLAN.md`'s implementation steps are checklist items. Each step must be presented to the user for acceptance *before* implementing it, and checked off (`- [x]`) in `PLAN.md` only after the user has accepted the finished result.
