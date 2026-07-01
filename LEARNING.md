@@ -14,3 +14,8 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - `@Service()` decorator (Angular v22+) used instead of `@Injectable({providedIn: 'root'})` — auto-provided singleton, no explicit `providedIn` needed.
 - `inject()` for `HttpClient` instead of constructor injection.
 - `provideHttpClient()` in `app.config.ts`: `FetchBackend` is the default `HttpBackend` in v22, so `withFetch()` is deprecated/unnecessary — just call `provideHttpClient()`.
+
+## Step 9 — TTL cache on `getStations()`
+
+- No built-in Angular primitive for cross-request server-side TTL caching: `resource()`/`httpResource()` are component-bound reactive fetchers (re-run on signal/param change, no TTL); `withHttpTransferCache` only dedupes SSR↔browser requests within a single render, not across separate incoming requests.
+- Used the standard RxJS pattern instead: `shareReplay(1)` on the `HttpClient` observable, gated by a manually tracked `expiresAt` timestamp.
