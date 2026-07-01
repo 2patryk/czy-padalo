@@ -57,3 +57,9 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - Guarded with `isPlatformBrowser(inject(PLATFORM_ID))` before touching `navigator` — this service is meant for client-only use, but Angular still constructs it during SSR if it's ever injected in a component rendered on the server.
 - Modeled the failure states as a discriminated union (`GeolocationError`, in `core/models/geolocation.model.ts`) instead of re-throwing the raw `GeolocationPositionError`, so consumers can `switch` on `.type` without depending on the DOM error-code constants.
 - Verified both the success and `permission-denied` paths in a live browser session by temporarily overriding `navigator.geolocation.getCurrentPosition` via devtools and calling the service through `ng.getComponent()` — real permission-prompt UI can't be driven by browser automation, so mocking the browser API was the practical way to exercise both branches.
+
+## Step 20 — `stations.service.ts`
+
+- Reused `Coordinates` from `geolocation.model.ts` for both the GPS result and the station lat/lon, so `findNearestStation` takes the same shape the homepage's GPS button will eventually produce.
+- Plain loop over `Station[]` tracking a running minimum rather than `Array.sort()` — avoids an O(n log n) sort when only the single closest station is needed.
+- Verified the Haversine formula against a real sample of `/list/meteo` (874 stations) in a throwaway Node script: Warszawa's city-center coordinates correctly resolve to `WARSZAWA-MŁK`, the actual nearest station (~2.5 km).
