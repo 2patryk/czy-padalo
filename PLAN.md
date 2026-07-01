@@ -96,25 +96,28 @@ Each step below is presented to the user for acceptance before being implemented
 - [x] 1. `ng new czypadalo --ssr --style=scss` with Vitest as the test runner; verify `ng serve` runs.
 - [x] 2. Verify `ng build` succeeds on the generated skeleton.
 - [x] 3. Deploy the unmodified skeleton to Vercel to confirm the SSR → serverless-function chain works end to end.
-- [ ] 4. Define TS models (`station.model.ts`, `rain-report.model.ts`) from a real sample response of `/list/meteo` and the `data` endpoint.
-- [ ] 5. `imgw-api.service.ts`: `getStations()` method only (no cache yet), called server-side.
-- [ ] 6. Add in-memory TTL cache to `getStations()` (~1h TTL).
-- [ ] 7. `imgw-api.service.ts`: `getStationHistory(code, hoursInterval)` method, no cache yet.
-- [ ] 8. Add in-memory TTL cache to `getStationHistory` (~5-10 min TTL).
-- [ ] 9. `cities.ts` with the initial hardcoded city → station list (start with a handful, e.g. 3-5, to validate the shape before filling in all ~20-30).
-- [ ] 10. `rain-report.service.ts`: 24h verdict logic given a station code (uses `precip24HoursSum`).
-- [ ] 11. `rain-verdict.component.ts`: presentational component rendering the verdict (yes/no + mm + station name), no real data yet (static/mock input).
-- [ ] 12. `city-page.component.ts` + `/:citySlug` route wiring: server-rendered, uses `rain-report.service.ts` + `rain-verdict.component.ts` for a real city.
-- [ ] 13. Unknown-slug redirect to `/`.
-- [ ] 14. Dynamic `Title`/`Meta` tags on the city page (title + description built from the real verdict).
-- [ ] 15. Fill in the rest of the initial city list (~20-30 cities total).
-- [ ] 16. `geolocation.service.ts` wrapping `navigator.geolocation.getCurrentPosition`, with permission-denial handling.
-- [ ] 17. Haversine nearest-station lookup in `stations.service.ts`.
-- [ ] 18. Homepage `location-picker.component.ts`: GPS button wired to geolocation + nearest-station lookup, feeding `rain-verdict`.
-- [ ] 19. Homepage manual station search (text input filtering the station list), feeding `rain-verdict`.
-- [ ] 20. Error/loading states: GPS denied, network error, no station in range, partial API data.
-- [ ] 21. Unit tests (Vitest) for pure logic: `id`→`code` mapping, Haversine, UTC→local time conversion, cache TTL behavior.
-- [ ] 22. Deploy the completed v1 to Vercel.
+- [x] 4. Add ESLint via `ng add @angular-eslint/schematics`.
+- [ ] 5. Add husky + lint-staged pre-commit hook running ESLint + Prettier on staged files.
+- [ ] 6. Add commitlint (husky `commit-msg` hook) enforcing the commit message convention from `CLAUDE.md`.
+- [ ] 7. Define TS models (`station.model.ts`, `rain-report.model.ts`) from a real sample response of `/list/meteo` and the `data` endpoint.
+- [ ] 8. `imgw-api.service.ts`: `getStations()` method only (no cache yet), called server-side.
+- [ ] 9. Add in-memory TTL cache to `getStations()` (~1h TTL).
+- [ ] 10. `imgw-api.service.ts`: `getStationHistory(code, hoursInterval)` method, no cache yet.
+- [ ] 11. Add in-memory TTL cache to `getStationHistory` (~5-10 min TTL).
+- [ ] 12. `cities.ts` with the initial hardcoded city → station list (start with a handful, e.g. 3-5, to validate the shape before filling in all ~20-30).
+- [ ] 13. `rain-report.service.ts`: 24h verdict logic given a station code (uses `precip24HoursSum`).
+- [ ] 14. `rain-verdict.component.ts`: presentational component rendering the verdict (yes/no + mm + station name), no real data yet (static/mock input).
+- [ ] 15. `city-page.component.ts` + `/:citySlug` route wiring: server-rendered, uses `rain-report.service.ts` + `rain-verdict.component.ts` for a real city.
+- [ ] 16. Unknown-slug redirect to `/`.
+- [ ] 17. Dynamic `Title`/`Meta` tags on the city page (title + description built from the real verdict).
+- [ ] 18. Fill in the rest of the initial city list (~20-30 cities total).
+- [ ] 19. `geolocation.service.ts` wrapping `navigator.geolocation.getCurrentPosition`, with permission-denial handling.
+- [ ] 20. Haversine nearest-station lookup in `stations.service.ts`.
+- [ ] 21. Homepage `location-picker.component.ts`: GPS button wired to geolocation + nearest-station lookup, feeding `rain-verdict`.
+- [ ] 22. Homepage manual station search (text input filtering the station list), feeding `rain-verdict`.
+- [ ] 23. Error/loading states: GPS denied, network error, no station in range, partial API data.
+- [ ] 24. Unit tests (Vitest) for pure logic: `id`→`code` mapping, Haversine, UTC→local time conversion, cache TTL behavior.
+- [ ] 25. Deploy the completed v1 to Vercel.
 
 ## Risks
 
