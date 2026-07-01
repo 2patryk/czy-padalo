@@ -94,7 +94,7 @@ src/app/
 Each step below is presented to the user for acceptance before being implemented, and checked off only after the user accepts the result — see `CLAUDE.md`.
 
 - [x] 1. `ng new czypadalo --ssr --style=scss` with Vitest as the test runner; verify `ng serve` runs.
-- [ ] 2. Verify `ng build` succeeds on the generated skeleton.
+- [x] 2. Verify `ng build` succeeds on the generated skeleton.
 - [ ] 3. Deploy the unmodified skeleton to Vercel to confirm the SSR → serverless-function chain works end to end.
 - [ ] 4. Define TS models (`station.model.ts`, `rain-report.model.ts`) from a real sample response of `/list/meteo` and the `data` endpoint.
 - [ ] 5. `imgw-api.service.ts`: `getStations()` method only (no cache yet), called server-side.
