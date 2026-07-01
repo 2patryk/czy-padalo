@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/index.mjs": {
+      "includeFiles": "dist/czypadalo/**"
+    }
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
+}
