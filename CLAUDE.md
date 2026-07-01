@@ -9,9 +9,9 @@ Angular app — see `PLAN.md` for the full project plan.
 
 ## Commit message convention
 
-- Format: `<type>: <lowercase summary>` — e.g. `feat: add rain verdict component`.
+- Format: `<type>: <summary>` — e.g. `feat: add rain verdict component`.
 - Common types: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`.
-- Summary is lowercase, in English, imperative mood, no trailing period.
+- Summary is in English, imperative mood, no trailing period. Default to lowercase right after the colon, following standard casing otherwise (proper nouns, acronyms like `SSR`/`API` keep their normal capitalization).
 
 ## Working through the plan
 

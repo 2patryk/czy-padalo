@@ -18,6 +18,7 @@ Key decisions reached during design review, most-recent first (see `git log` on 
 - **UI/content language: Polish.** All user-facing text (labels, verdicts, error messages) is in Polish, since this is a Polish audience/service. Code, comments, and docs (`PLAN.md`, `CLAUDE.md`) stay in English — see `CLAUDE.md`.
 - **Angular version: latest stable**, no pinning at `ng new` time.
 - **Per-city SEO meta tags (`Title`/`Meta` services) are in v1**, not deferred — dynamic title + description with real verdict content is the whole point of using SSR, so it belongs in the city-route step, not a later "polish" pass.
+- **UI is mobile-first.** Layout and styles are designed for small screens first, then progressively enhanced for larger viewports — most traffic (GPS "use my location" lookups) is expected to be on mobile.
 
 ## Scope (v1 / MVP)
 
