@@ -33,3 +33,9 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - `withComponentInputBinding()` added to `provideRouter()` so the resolved `report` data binds straight to the component's `input()` (`resolve: { report: ... }` key matches the input name), no manual `ActivatedRoute` reads.
 - `app.routes.server.ts`: added `{ path: ':citySlug', renderMode: RenderMode.Server }` — city pages need per-request dynamic rendering (live IMGW data), unlike the prerendered catch-all.
 - Verified against live data via `ng serve` + `/warszawa`: real IMGW station data flows through resolver → component → `rain-verdict`.
+
+## Step 16 — unknown-slug redirect
+
+- `ResolveFn` can return a `RedirectCommand` (built via `Router.parseUrl()`) instead of resolved data — the router navigates there and never activates the route, so `CityPageComponent` never has to handle a "not found" state itself.
+- Applied the same `RedirectCommand` fallback when a valid slug's station has no matching data (`RainReportService.getRainReport` returns `null`), since both cases have the same "nothing to show" outcome — kept the component's `report` input as a plain, non-nullable `RainReport`.
+- Verified via `ng serve`: `/warszawa` → 200, `/nonexistent-city` → 302 to `/`.

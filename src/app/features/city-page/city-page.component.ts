@@ -5,12 +5,8 @@ import { RainVerdictComponent } from '../rain-verdict/rain-verdict.component';
 @Component({
   selector: 'app-city-page',
   imports: [RainVerdictComponent],
-  template: `
-    @if (report(); as report) {
-      <app-rain-verdict [report]="report" />
-    }
-  `,
+  template: ` <app-rain-verdict [report]="report()" /> `,
 })
 export class CityPageComponent {
-  readonly report = input.required<RainReport | null>();
+  readonly report = input.required<RainReport>();
 }

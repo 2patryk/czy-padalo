@@ -1,21 +1,25 @@
 import { inject } from '@angular/core';
-import { ResolveFn } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { RedirectCommand, ResolveFn, Router } from '@angular/router';
+import { map, Observable, of } from 'rxjs';
 import { CITIES } from '../../core/data/cities';
 import { RainReport } from '../../core/models/rain-report.model';
 import { RainReportService } from '../../core/services/rain-report.service';
 
-/** Returns `null` for an unknown slug — redirect handling is added in a later step. */
-export const cityPageResolver: ResolveFn<RainReport | null> = (
+/** Redirects to `/` for an unknown slug or a slug whose station has no data. */
+export const cityPageResolver: ResolveFn<RainReport | RedirectCommand> = (
   route,
-): Observable<RainReport | null> => {
+): Observable<RainReport | RedirectCommand> => {
   const rainReportService = inject(RainReportService);
+  const router = inject(Router);
+  const redirectHome = new RedirectCommand(router.parseUrl('/'));
   const slug = route.paramMap.get('citySlug');
   const city = CITIES.find((c) => c.slug === slug);
 
   if (!city) {
-    return of(null);
+    return of(redirectHome);
   }
 
-  return rainReportService.getRainReport(city.stationCode);
+  return rainReportService
+    .getRainReport(city.stationCode)
+    .pipe(map((report) => report ?? redirectHome));
 };
