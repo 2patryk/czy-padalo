@@ -29,6 +29,12 @@
   color: #555;
 }
 
+.verdict__distance {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #777;
+}
+
 @media (min-width: 640px) {
   .verdict__label {
     font-size: 2.75rem;

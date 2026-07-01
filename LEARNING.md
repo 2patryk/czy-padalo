@@ -63,3 +63,12 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - Reused `Coordinates` from `geolocation.model.ts` for both the GPS result and the station lat/lon, so `findNearestStation` takes the same shape the homepage's GPS button will eventually produce.
 - Plain loop over `Station[]` tracking a running minimum rather than `Array.sort()` — avoids an O(n log n) sort when only the single closest station is needed.
 - Verified the Haversine formula against a real sample of `/list/meteo` (874 stations) in a throwaway Node script: Warszawa's city-center coordinates correctly resolve to `WARSZAWA-MŁK`, the actual nearest station (~2.5 km).
+
+## Step 21 — `location-picker.component.ts` (homepage)
+
+- Split UI state into two signals (`status: 'idle' | 'loading' | 'error' | 'success'` and `result: LocationResult | null`) instead of one discriminated-union signal — Angular's template type narrowing doesn't follow a signal read across an `@switch`, so a single `state()` call couldn't be safely narrowed inside `@case ('success')`. An `@if (result(); as result)` inside that case narrows cleanly instead.
+- Chained the three async steps (GPS → nearest station → rain report) with `switchMap`, short-circuiting to `of(null)` when no station/report is found, and a single `catchError(() => of(null))` at the end — one `error`/`success` outcome for the whole chain instead of three separate error branches.
+- Extended `RainVerdictComponent` with an optional `distanceKm = input<number | null>(null)` (only shown via `@if`) so the same presentational component serves both the city page (no distance) and the GPS flow (with distance), instead of forking a second verdict component.
+- Homepage route (`path: ''`) is prerendered (falls through to the `'**'` `RenderMode.Prerender` rule in `app.routes.server.ts`, since `':citySlug'` doesn't match an empty path) — matches the plan decision that GPS lookup is client-side-only with no SEO value.
+- Verified success and `permission-denied` paths live via the same `navigator.geolocation` mocking technique as step 19, clicking the real button in a running `ng serve` session.
+- Removed the `ng new` placeholder markup from `app.html`/`app.ts` (and the now-unrelated `app.spec.ts` title assertion) — it was masking real route content the whole time, just below the fold.
