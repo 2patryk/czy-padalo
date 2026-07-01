@@ -6,6 +6,7 @@ A website (Angular, SSR) that, for a given location, answers: **did it rain in t
 
 Key decisions reached during design review, most-recent first (see `git log` on this file for how the plan evolved):
 
+- **Vercel project is Git-connected (2026-07-01)**, replacing the manual `vercel deploy` used for the step-3 skeleton check. Every push to `main` now auto-deploys to production; other branches/PRs get preview deployments. This makes step 25 a verification step rather than a manual deploy.
 - **MVP scope is 24h-only.** Week toggle and hourly breakdown are explicitly deferred past v1 — see "Out of scope for v1".
 - **Styling: plain SCSS**, component-encapsulated (no Tailwind). Chosen for a more "native Angular" learning experience.
 - **Testing: Vitest**, not Jasmine/Karma — current recommended default for new Angular projects.
@@ -120,7 +121,7 @@ Each step below is presented to the user for acceptance before being implemented
 - [x] 22. Homepage manual station search (text input filtering the station list), feeding `rain-verdict`.
 - [ ] 23. Error/loading states: GPS denied, network error, no station in range, partial API data.
 - [ ] 24. Unit tests (Vitest) for pure logic: `id`→`code` mapping, Haversine, UTC→local time conversion, cache TTL behavior.
-- [ ] 25. Deploy the completed v1 to Vercel.
+- [ ] 25. Verify the completed v1 on the latest Vercel production deployment. (No manual deploy step needed — the Vercel project is Git-connected as of 2026-07-01, so every push to `main` auto-deploys to production.)
 
 ## Risks
 
