@@ -110,7 +110,7 @@ Each step below is presented to the user for acceptance before being implemented
 - [x] 12. `cities.ts` with the initial hardcoded city → station list (start with a handful, e.g. 3-5, to validate the shape before filling in all ~20-30).
 - [x] 13. `rain-report.service.ts`: 24h verdict logic given a station code (uses `precip24HoursSum`).
 - [x] 14. `rain-verdict.component.ts`: presentational component rendering the verdict (yes/no + mm + station name), no real data yet (static/mock input).
-- [ ] 15. `city-page.component.ts` + `/:citySlug` route wiring: server-rendered, uses `rain-report.service.ts` + `rain-verdict.component.ts` for a real city.
+- [x] 15. `city-page.component.ts` + `/:citySlug` route wiring: server-rendered, uses `rain-report.service.ts` + `rain-verdict.component.ts` for a real city.
 - [ ] 16. Unknown-slug redirect to `/`.
 - [ ] 17. Dynamic `Title`/`Meta` tags on the city page (title + description built from the real verdict).
 - [ ] 18. Fill in the rest of the initial city list (~20-30 cities total).

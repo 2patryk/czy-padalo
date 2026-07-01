@@ -26,3 +26,10 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - `computed()` derives the verdict label text from the input signal instead of a template `@if`/`@else` pair.
 - Standalone `Pipe` (`MmPipe`) for the reusable `"X.X mm"` formatting, per the project's `shared/pipes/` convention — kept separate from the component so other features (location-picker, later) can reuse it.
 - Verified manually via temporary mock wiring in `app.ts`/`app.html` + `ng serve`, since nothing routes to this component until step 15 (city-page).
+
+## Step 15 — `city-page.component.ts` + `/:citySlug` route
+
+- `ResolveFn` (`city-page.resolver.ts`) fetches the `RainReport` before navigation, keeping `CityPageComponent` free of async/loading logic — it just renders an already-resolved value.
+- `withComponentInputBinding()` added to `provideRouter()` so the resolved `report` data binds straight to the component's `input()` (`resolve: { report: ... }` key matches the input name), no manual `ActivatedRoute` reads.
+- `app.routes.server.ts`: added `{ path: ':citySlug', renderMode: RenderMode.Server }` — city pages need per-request dynamic rendering (live IMGW data), unlike the prerendered catch-all.
+- Verified against live data via `ng serve` + `/warszawa`: real IMGW station data flows through resolver → component → `rain-verdict`.
