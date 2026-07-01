@@ -34,7 +34,7 @@
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
-              "allowedHosts": []
+              "allowedHosts": ["czy-padalo.vercel.app", "*.patrykordons-projects.vercel.app"]
             },
             "ssr": {
               "entry": "src/server.ts"
