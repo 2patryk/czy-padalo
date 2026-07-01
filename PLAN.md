@@ -43,6 +43,7 @@ IMGW hydro API (unofficial), called **server-side only**:
 - `GET https://hydro-back.imgw.pl/map/stations/meteorologic?onlyMainStations=false` — alternate station list (map-marker shaped: `id`, `c`, `n`, `lo`, `la`, `s` precip-state category). Confirmed working but returns a category string, not a raw mm sum like `/list/meteo`'s `precip24HoursSum` — evaluate at step 4 (model definition) whether it's useful as a supplement or can be ignored in favor of `/list/meteo`.
 
 Gotchas to keep in mind in code (and unit-test):
+
 - **All `hydro-back.imgw.pl` requests return 403 without browser-like headers.** Confirmed: a plain request with no `User-Agent`/`Referer` is rejected; adding `User-Agent: Mozilla/5.0 ...` and `Referer: https://hydro.imgw.pl/` returns 200. `imgw-api.service.ts` must always send these headers server-side.
 - `id` ≠ `code` — always map through `code`.
 - Timestamps in responses are UTC — convert to local time (Europe/Warsaw) for display.
@@ -97,7 +98,7 @@ Each step below is presented to the user for acceptance before being implemented
 - [x] 2. Verify `ng build` succeeds on the generated skeleton.
 - [x] 3. Deploy the unmodified skeleton to Vercel to confirm the SSR → serverless-function chain works end to end.
 - [x] 4. Add ESLint via `ng add @angular-eslint/schematics`.
-- [ ] 5. Add husky + lint-staged pre-commit hook running ESLint + Prettier on staged files.
+- [x] 5. Add husky + lint-staged pre-commit hook running ESLint + Prettier on staged files.
 - [ ] 6. Add commitlint (husky `commit-msg` hook) enforcing the commit message convention from `CLAUDE.md`.
 - [ ] 7. Define TS models (`station.model.ts`, `rain-report.model.ts`) from a real sample response of `/list/meteo` and the `data` endpoint.
 - [ ] 8. `imgw-api.service.ts`: `getStations()` method only (no cache yet), called server-side.
