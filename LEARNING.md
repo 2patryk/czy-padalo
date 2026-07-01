@@ -45,3 +45,8 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - Injected `Title`/`Meta` (`@angular/platform-browser`) in `CityPageComponent`'s constructor, but did the actual `setTitle`/`updateTag` calls inside an `effect()` rather than the constructor body — signal inputs (`report`, `citySlug`) aren't guaranteed to have a value yet when the constructor runs, and `effect()` re-runs automatically if the resolved data changes for a reused route instance.
 - `citySlug` is a plain `input.required<string>()` bound automatically from the `:citySlug` route param via `withComponentInputBinding()` (added in step 15) — no manual `ActivatedRoute` read needed.
 - Verified via `ng serve` + `curl` on `/lodz`: real `<title>` and `<meta name="description">` reflecting the live verdict.
+
+## Step 18 — full city list
+
+- No Angular pattern here — matched each of the ~30 largest Polish cities to its nearest real IMGW station via Haversine distance against the live `/list/meteo` response (one-off script, not checked in), since `hydro-back.imgw.pl` station names don't always match city names exactly (e.g. `GDAŃSK-PORT PÓŁNOCNY`).
+- Spot-verified several new routes (`/gdansk`, `/rzeszow`, `/tychy`, `/elblag`, `/olsztyn`) via `ng serve` — each resolves real live data end-to-end.
