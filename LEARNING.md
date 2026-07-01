@@ -107,3 +107,9 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - Chose a system serif font stack (`Georgia, 'Iowan Old Style', ...`) over loading a webfont (e.g. Literata) — avoids a render-blocking/FOUT-prone external font request for an MVP, at the cost of not matching Kindle's actual Bookerly typeface exactly.
 - Verified contrast ratios with a small script (WCAG relative-luminance formula) before ever opening a browser — all four ink/muted/accent-on-background pairs, both themes, land at 6.2:1 or higher (AA requires 4.5:1 for body text).
 - Verified visually in a live `ng serve` session: dark mode rendered correctly from the OS preference automatically; light mode was checked by injecting a temporary `!important` override stylesheet via devtools (can't toggle the actual OS color scheme from browser automation).
+
+## Steps 27–28 — centered layout, `rain-verdict` restyle
+
+- Centered column is a single wrapper `<div class="page">` around `<router-outlet />` in `app.html`, styled with `max-width: var(--content-max-width); margin-inline: auto;` in `app.scss` — one place controls the reading width for every route, no per-page layout duplication.
+- Found a real regression by testing the _default_ (non-"rain") verdict state in dark mode, not just the accent-colored one: `rain-verdict.component.scss` had hardcoded light-mode colors (`#1a1a1a` text, `#333`, `#555`) left over from before the design tokens existed, making the "Nie padało" label nearly invisible on the new dark background. Screenshotting only the "Padało" (accent-colored, still legible by coincidence) state would have missed this — always check every visual state, not just the first one that renders.
+- Tried a bordered "card" treatment around the verdict first (`border` + `border-radius`); reverted after user feedback that it looked out of place — plain typography on the page background reads more like the intended e-ink page than a boxed UI card.
