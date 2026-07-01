@@ -99,7 +99,7 @@ Each step below is presented to the user for acceptance before being implemented
 - [x] 3. Deploy the unmodified skeleton to Vercel to confirm the SSR → serverless-function chain works end to end.
 - [x] 4. Add ESLint via `ng add @angular-eslint/schematics`.
 - [x] 5. Add husky + lint-staged pre-commit hook running ESLint + Prettier on staged files.
-- [ ] 6. Add commitlint (husky `commit-msg` hook) enforcing the commit message convention from `CLAUDE.md`.
+- [x] 6. Add commitlint (husky `commit-msg` hook) enforcing the commit message convention from `CLAUDE.md`.
 - [ ] 7. Define TS models (`station.model.ts`, `rain-report.model.ts`) from a real sample response of `/list/meteo` and the `data` endpoint.
 - [ ] 8. `imgw-api.service.ts`: `getStations()` method only (no cache yet), called server-side.
 - [ ] 9. Add in-memory TTL cache to `getStations()` (~1h TTL).
