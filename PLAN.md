@@ -106,7 +106,7 @@ Each step below is presented to the user for acceptance before being implemented
 - [x] 8. `imgw-api.service.ts`: `getStations()` method only (no cache yet), called server-side.
 - [x] 9. Add in-memory TTL cache to `getStations()` (~1h TTL).
 - [x] 10. `imgw-api.service.ts`: `getStationHistory(code, hoursInterval)` method, no cache yet.
-- [ ] 11. Add in-memory TTL cache to `getStationHistory` (~5-10 min TTL).
+- [x] 11. Add in-memory TTL cache to `getStationHistory` (~5-10 min TTL).
 - [ ] 12. `cities.ts` with the initial hardcoded city → station list (start with a handful, e.g. 3-5, to validate the shape before filling in all ~20-30).
 - [ ] 13. `rain-report.service.ts`: 24h verdict logic given a station code (uses `precip24HoursSum`).
 - [ ] 14. `rain-verdict.component.ts`: presentational component rendering the verdict (yes/no + mm + station name), no real data yet (static/mock input).
