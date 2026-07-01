@@ -127,3 +127,9 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - `RainReport.hasData` replaces the abandoned `statusCode` field — distinguishes "0mm, and we know that because we got a reading" from "we have no reading at all" (`precip24HoursSum === null`), which maps to a distinct "unknown" dashed-circle icon.
 - `PrecipIconComponent` is `aria-hidden="true"` internally — it's purely decorative next to text that already states the verdict in words, so it shouldn't be double-announced by screen readers. Added a plain `title` attribute (via `host: { '[attr.title]': ... }`) for a hover tooltip, not for a11y purposes.
 - Verified all three real-data states live (not just "does it compile"): Gdynia 0.8mm → light single drop, Łódź 0mm → empty circle, Chałupki 39.7mm → heavy double drop.
+
+## Step 31 — precipitation breakdown fields
+
+- `precip6HoursSum`/`precip12HoursSum` exist in the real `/list/meteo` response (confirmed in PLAN.md's original sample) but were never added to the `Station` model in v1 since nothing used them — added now alongside the existing `precip24HoursSum`/`lastHourPrecip`/`dailyPrecip` fields, same `PrecipRangeSum | null` shape.
+- `RainReportService` maps each nullable field with the same `?? 0` fallback already used for the 24h `mm`, kept consistent rather than introducing a different null-handling convention per field.
+- Verified against live data (Gdynia) that all four new values are populated and distinct (lastHour 0mm, daily 0.8mm, 6h 0mm, 12h 0.1mm, 24h 0.8mm) — confirms these really are different time windows, not duplicates of the same number.

@@ -31,6 +31,8 @@ export interface Station {
   statusCode: StationStatusCode;
   lastHourPrecip: PrecipReading | null;
   dailyPrecip: PrecipReading | null;
+  precip6HoursSum: PrecipRangeSum | null;
+  precip12HoursSum: PrecipRangeSum | null;
   precip24HoursSum: PrecipRangeSum | null;
 }
 

@@ -23,6 +23,10 @@ export class RainReportService {
           didRain: mm > 0,
           mm,
           hasData: station.precip24HoursSum !== null,
+          lastHourMm: station.lastHourPrecip?.value ?? 0,
+          dailyMm: station.dailyPrecip?.value ?? 0,
+          sixHourMm: station.precip6HoursSum?.value ?? 0,
+          twelveHourMm: station.precip12HoursSum?.value ?? 0,
         };
       }),
     );

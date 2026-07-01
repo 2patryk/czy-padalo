@@ -6,4 +6,8 @@ export interface RainReport {
   mm: number;
   /** `false` if the station's `precip24HoursSum` was `null` (no reading, not necessarily no rain). */
   hasData: boolean;
+  lastHourMm: number;
+  dailyMm: number;
+  sixHourMm: number;
+  twelveHourMm: number;
 }
