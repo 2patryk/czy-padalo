@@ -6,6 +6,12 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import {
+  IMGW_HEADERS,
+  STATIONS_CACHE_TTL_MS,
+  STATIONS_URL,
+} from './app/core/services/imgw-api.service';
+import { Station } from './app/core/models/station.model';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -13,16 +19,38 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
+ * Same-origin proxy for the station list, so the browser (homepage station
+ * search) never has to call hydro-back.imgw.pl directly — see PLAN.md
+ * gotchas on required headers and CORS.
  */
+let stationsCache: { data: Station[]; expiresAt: number } | null = null;
+
+app.get('/api/stations', async (req, res) => {
+  const now = Date.now();
+  if (stationsCache && stationsCache.expiresAt > now) {
+    res.json(stationsCache.data);
+    return;
+  }
+
+  try {
+    const headers: Record<string, string> = {};
+    IMGW_HEADERS.keys().forEach((key) => {
+      headers[key] = IMGW_HEADERS.get(key) ?? '';
+    });
+
+    const response = await fetch(STATIONS_URL, { headers });
+    if (!response.ok) {
+      res.status(response.status).end();
+      return;
+    }
+
+    const data = (await response.json()) as Station[];
+    stationsCache = { data, expiresAt: now + STATIONS_CACHE_TTL_MS };
+    res.json(data);
+  } catch {
+    res.status(502).end();
+  }
+});
 
 /**
  * Serve static files from /browser

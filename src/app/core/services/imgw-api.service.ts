@@ -1,18 +1,20 @@
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { inject, Service } from '@angular/core';
+import { inject, PLATFORM_ID, Service } from '@angular/core';
 import { Observable, shareReplay } from 'rxjs';
 import { Station, StationHistory } from '../models/station.model';
 
-const STATIONS_URL = 'https://hydro-back.imgw.pl/list/meteo';
+export const STATIONS_URL = 'https://hydro-back.imgw.pl/list/meteo';
 const STATION_DATA_URL = 'https://hydro-back.imgw.pl/station/meteo/data';
-const STATIONS_CACHE_TTL_MS = 60 * 60 * 1000;
+export const STATIONS_CACHE_TTL_MS = 60 * 60 * 1000;
 const STATION_HISTORY_CACHE_TTL_MS = 10 * 60 * 1000;
 
 /**
  * hydro-back.imgw.pl returns 403 without browser-like headers — see PLAN.md gotchas.
- * All calls in this service run server-side only (SSR).
+ * Calls from the browser go through our own `/api/stations` instead (see `server.ts`),
+ * since the browser can't be trusted to send these headers reliably and would hit CORS anyway.
  */
-const IMGW_HEADERS = new HttpHeaders({
+export const IMGW_HEADERS = new HttpHeaders({
   'User-Agent': 'Mozilla/5.0',
   Referer: 'https://hydro.imgw.pl/',
 });
@@ -20,6 +22,7 @@ const IMGW_HEADERS = new HttpHeaders({
 @Service()
 export class ImgwApiService {
   private readonly http = inject(HttpClient);
+  private readonly platformId = inject(PLATFORM_ID);
   private stationsCache: { data$: Observable<Station[]>; expiresAt: number } | null = null;
   private readonly stationHistoryCache = new Map<
     string,
@@ -32,9 +35,9 @@ export class ImgwApiService {
       return this.stationsCache.data$;
     }
 
-    const data$ = this.http
-      .get<Station[]>(STATIONS_URL, { headers: IMGW_HEADERS })
-      .pipe(shareReplay(1));
+    const data$ = isPlatformBrowser(this.platformId)
+      ? this.http.get<Station[]>('/api/stations').pipe(shareReplay(1))
+      : this.http.get<Station[]>(STATIONS_URL, { headers: IMGW_HEADERS }).pipe(shareReplay(1));
     this.stationsCache = { data$, expiresAt: now + STATIONS_CACHE_TTL_MS };
     return data$;
   }

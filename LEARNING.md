@@ -72,3 +72,10 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - Homepage route (`path: ''`) is prerendered (falls through to the `'**'` `RenderMode.Prerender` rule in `app.routes.server.ts`, since `':citySlug'` doesn't match an empty path) — matches the plan decision that GPS lookup is client-side-only with no SEO value.
 - Verified success and `permission-denied` paths live via the same `navigator.geolocation` mocking technique as step 19, clicking the real button in a running `ng serve` session.
 - Removed the `ng new` placeholder markup from `app.html`/`app.ts` (and the now-unrelated `app.spec.ts` title assertion) — it was masking real route content the whole time, just below the fold.
+
+## Step 22 — homepage manual station search
+
+- Added a same-origin `/api/stations` Express route in `server.ts` (plain `fetch`, module-scoped TTL cache) so the browser never has to call `hydro-back.imgw.pl` directly — that call needs spoofed headers and would hit CORS/403 from a real browser context.
+- `ImgwApiService.getStations()` now branches on `isPlatformBrowser`: server-side render still hits the real IMGW URL with headers (unchanged), browser-side hits `/api/stations` instead. `RainReportService` and `StationsService` needed zero changes — they only ever called `getStations()`, so the proxying is fully transparent to the rest of the app.
+- `resource()` (not a manual subscription) drives the search box: `params: () => this.searchQuery()` re-runs the loader on every keystroke, but since `ImgwApiService`'s `shareReplay(1)` cache means only the _first_ keystroke triggers a real HTTP call — every later filter is synchronous over the cached list.
+- Found and fixed a real bug via manual browser testing: naive `.toLowerCase().includes()` matching failed on diacritics (typing "Gdansk" didn't match "GDAŃSK"). Fixed with `String.prototype.normalize('NFD')` + stripping the `\p{Diacritic}` Unicode property before comparing, applied to both the query and station names in `StationsService.searchByName`.

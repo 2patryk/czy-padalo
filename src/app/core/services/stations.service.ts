@@ -1,8 +1,15 @@
 import { inject, Service } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { Coordinates } from '../models/geolocation.model';
 import { Station } from '../models/station.model';
 import { ImgwApiService } from './imgw-api.service';
+
+const SEARCH_RESULTS_LIMIT = 10;
+
+/** Strips diacritics so e.g. "gdansk" matches "GDAŃSK". */
+function foldDiacritics(value: string): string {
+  return value.normalize('NFD').replace(/\p{Diacritic}/gu, '');
+}
 
 const EARTH_RADIUS_KM = 6371;
 
@@ -30,6 +37,24 @@ export class StationsService {
   /** Returns `null` if the station list is empty. */
   findNearestStation(origin: Coordinates): Observable<NearestStation | null> {
     return this.imgwApi.getStations().pipe(map((stations) => this.nearest(origin, stations)));
+  }
+
+  /** Case- and diacritic-insensitive substring match on station name, capped at `SEARCH_RESULTS_LIMIT`. */
+  searchByName(query: string): Observable<Station[]> {
+    const normalized = foldDiacritics(query.trim().toLowerCase());
+    if (!normalized) {
+      return of([]);
+    }
+
+    return this.imgwApi
+      .getStations()
+      .pipe(
+        map((stations) =>
+          stations
+            .filter((station) => foldDiacritics(station.name.toLowerCase()).includes(normalized))
+            .slice(0, SEARCH_RESULTS_LIMIT),
+        ),
+      );
   }
 
   private nearest(origin: Coordinates, stations: Station[]): NearestStation | null {

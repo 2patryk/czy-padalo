@@ -117,7 +117,7 @@ Each step below is presented to the user for acceptance before being implemented
 - [x] 19. `geolocation.service.ts` wrapping `navigator.geolocation.getCurrentPosition`, with permission-denial handling.
 - [x] 20. Haversine nearest-station lookup in `stations.service.ts`.
 - [x] 21. Homepage `location-picker.component.ts`: GPS button wired to geolocation + nearest-station lookup, feeding `rain-verdict`.
-- [ ] 22. Homepage manual station search (text input filtering the station list), feeding `rain-verdict`.
+- [x] 22. Homepage manual station search (text input filtering the station list), feeding `rain-verdict`.
 - [ ] 23. Error/loading states: GPS denied, network error, no station in range, partial API data.
 - [ ] 24. Unit tests (Vitest) for pure logic: `id`→`code` mapping, Haversine, UTC→local time conversion, cache TTL behavior.
 - [ ] 25. Deploy the completed v1 to Vercel.
