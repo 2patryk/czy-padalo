@@ -50,3 +50,10 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 
 - No Angular pattern here — matched each of the ~30 largest Polish cities to its nearest real IMGW station via Haversine distance against the live `/list/meteo` response (one-off script, not checked in), since `hydro-back.imgw.pl` station names don't always match city names exactly (e.g. `GDAŃSK-PORT PÓŁNOCNY`).
 - Spot-verified several new routes (`/gdansk`, `/rzeszow`, `/tychy`, `/elblag`, `/olsztyn`) via `ng serve` — each resolves real live data end-to-end.
+
+## Step 19 — `geolocation.service.ts`
+
+- Wrapped the callback-based `navigator.geolocation.getCurrentPosition` in a plain RxJS `Observable`, matching the `imgw-api.service.ts` convention of exposing Observables rather than Promises from services.
+- Guarded with `isPlatformBrowser(inject(PLATFORM_ID))` before touching `navigator` — this service is meant for client-only use, but Angular still constructs it during SSR if it's ever injected in a component rendered on the server.
+- Modeled the failure states as a discriminated union (`GeolocationError`, in `core/models/geolocation.model.ts`) instead of re-throwing the raw `GeolocationPositionError`, so consumers can `switch` on `.type` without depending on the DOM error-code constants.
+- Verified both the success and `permission-denied` paths in a live browser session by temporarily overriding `navigator.geolocation.getCurrentPosition` via devtools and calling the service through `ng.getComponent()` — real permission-prompt UI can't be driven by browser automation, so mocking the browser API was the practical way to exercise both branches.

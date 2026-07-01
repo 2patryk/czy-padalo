@@ -114,7 +114,7 @@ Each step below is presented to the user for acceptance before being implemented
 - [x] 16. Unknown-slug redirect to `/`.
 - [x] 17. Dynamic `Title`/`Meta` tags on the city page (title + description built from the real verdict).
 - [x] 18. Fill in the rest of the initial city list (~20-30 cities total).
-- [ ] 19. `geolocation.service.ts` wrapping `navigator.geolocation.getCurrentPosition`, with permission-denial handling.
+- [x] 19. `geolocation.service.ts` wrapping `navigator.geolocation.getCurrentPosition`, with permission-denial handling.
 - [ ] 20. Haversine nearest-station lookup in `stations.service.ts`.
 - [ ] 21. Homepage `location-picker.component.ts`: GPS button wired to geolocation + nearest-station lookup, feeding `rain-verdict`.
 - [ ] 22. Homepage manual station search (text input filtering the station list), feeding `rain-verdict`.
