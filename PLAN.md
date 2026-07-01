@@ -49,6 +49,8 @@ Gotchas to keep in mind in code (and unit-test):
 - Timestamps in responses are UTC — convert to local time (Europe/Warsaw) for display.
 - Verify the actual backward reach of `hoursInterval` (does it work for 168h?) before building the week feature.
 - The API is unofficial — it may change without notice; keep all API communication in one service (`ImgwApiService`) so a contract change only requires editing one place.
+- Confirmed via a real sample of `/list/meteo` (874 stations, 2026-07-01): precip fields (`lastHourPrecip`, `dailyPrecip`, `precip24HoursSum`, etc.) can be `null` for some stations — model them as nullable.
+- Real `statusCode` values seen in the sample: `no-precip`, `precip`, `high-precip`, `no-precip-data`, `no-hours-precip-data`.
 
 ## Angular architecture
 
@@ -100,7 +102,7 @@ Each step below is presented to the user for acceptance before being implemented
 - [x] 4. Add ESLint via `ng add @angular-eslint/schematics`.
 - [x] 5. Add husky + lint-staged pre-commit hook running ESLint + Prettier on staged files.
 - [x] 6. Add commitlint (husky `commit-msg` hook) enforcing the commit message convention from `CLAUDE.md`.
-- [ ] 7. Define TS models (`station.model.ts`, `rain-report.model.ts`) from a real sample response of `/list/meteo` and the `data` endpoint.
+- [x] 7. Define TS models (`station.model.ts`, `rain-report.model.ts`) from a real sample response of `/list/meteo` and the `data` endpoint.
 - [ ] 8. `imgw-api.service.ts`: `getStations()` method only (no cache yet), called server-side.
 - [ ] 9. Add in-memory TTL cache to `getStations()` (~1h TTL).
 - [ ] 10. `imgw-api.service.ts`: `getStationHistory(code, hoursInterval)` method, no cache yet.
