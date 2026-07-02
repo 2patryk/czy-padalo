@@ -1,4 +1,4 @@
-import { Component, inject, input, resource } from '@angular/core';
+import { Component, computed, inject, input, resource } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ImgwApiService } from '../../core/services/imgw-api.service';
 import { MmPipe } from '../../shared/pipes/mm.pipe';
@@ -19,7 +19,7 @@ const HOURS = 24;
         <p class="precip-history__hint" role="alert">Nie udało się pobrać historii opadów.</p>
       } @else if (history.value(); as value) {
         <ul class="precip-history__list">
-          @for (entry of value.precip; track entry.date) {
+          @for (entry of entriesNewestFirst(); track entry.date) {
             <li class="precip-history__row" [class.precip-history__row--rain]="entry.value > 0">
               <span class="precip-history__time">{{ formatLocalTime(entry.date) }}</span>
               <span class="precip-history__value">{{ entry.value | mm }}</span>
@@ -40,6 +40,10 @@ export class PrecipHistoryComponent {
     params: () => this.stationCode(),
     loader: ({ params: code }) => firstValueFrom(this.imgwApi.getStationHistory(code, HOURS)),
   });
+
+  protected readonly entriesNewestFirst = computed(() =>
+    [...(this.history.value()?.precip ?? [])].reverse(),
+  );
 
   protected readonly formatLocalTime = formatLocalTime;
 }

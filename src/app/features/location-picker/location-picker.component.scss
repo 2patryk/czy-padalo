@@ -52,8 +52,9 @@
     width: 100%;
     max-width: 20rem;
 
-    &:focus {
-      outline: none;
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 4px;
       border-color: var(--color-accent);
     }
 
@@ -81,11 +82,6 @@
   padding: var(--space-1) var(--space-2);
   cursor: pointer;
   text-decoration: underline;
-  text-decoration-color: transparent;
-
-  &:hover {
-    text-decoration-color: currentcolor;
-  }
 }
 
 .location-picker__hint {

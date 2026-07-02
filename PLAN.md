@@ -147,6 +147,8 @@ v1 is functionally complete but visually bare (unstyled, left-aligned, no dark m
 - **Simple precipitation icons** (no rain / light rain / heavy rain) driven by the real `statusCode` field already returned by `/list/meteo`, shown next to the verdict on both city pages and the GPS/search result.
 - **Precipitation breakdown**: show `lastHourPrecip`, `dailyPrecip`, and the 6h/12h sums alongside the existing 24h total.
 - **Hourly precipitation history**: a simple list (not a chart library) of the last 24h using the existing `getStationHistory` endpoint, shown on both city pages and the GPS/search result.
+- **Custom favicon** matching the precip-icon visual identity, replacing the default Angular one.
+- **Per-city Open Graph image** for social sharing previews of city pages.
 
 ### Out of scope for v2
 
@@ -166,7 +168,9 @@ v1 is functionally complete but visually bare (unstyled, left-aligned, no dark m
 - [x] 32. Display the precipitation breakdown (from step 31) in `rain-verdict.component`.
 - [x] 33. Add `precip-history.component` rendering the last 24h hourly breakdown as a plain list, using the existing (currently unused) `ImgwApiService.getStationHistory`.
 - [x] 34. Wire `precip-history.component` into `city-page.component` and the GPS/search result in `location-picker.component`.
-- [ ] 35. Verify dark mode end-to-end (both themes, every page/component) and check WCAG AA contrast + icon accessibility (ARIA labels).
+- [x] 35. Verify dark mode end-to-end (both themes, every page/component) and check WCAG AA contrast + icon accessibility (ARIA labels).
+- [ ] 36. Add a custom favicon matching the app's precip-icon visual identity, replacing the default Angular favicon.
+- [ ] 37. Generate a per-city Open Graph image (`og:image`) for social sharing previews, wired into `city-page.component`'s `Meta` tags.
 
 ## Risks (v2)
 

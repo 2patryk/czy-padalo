@@ -1,7 +1,9 @@
 .precip-history {
-  margin-top: var(--space-5);
+  margin: var(--space-5) auto 0;
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-border);
+  width: 100%;
+  max-width: 20rem;
 }
 
 .precip-history__summary {
