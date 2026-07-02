@@ -35,9 +35,9 @@ export class CityPageComponent {
       const description = `${verdictText} w ostatnich 24 godzinach w mieście ${cityName}. Sprawdź aktualny raport opadów dla najbliższej stacji pomiarowej.`;
       const imageUrl = `${origin}/api/og/${this.citySlug()}`;
 
-      title.setTitle(`Czy pada w mieście ${cityName}? — ${verdictText}`);
+      title.setTitle(`Czy padało w mieście ${cityName}? — ${verdictText}`);
       meta.updateTag({ name: 'description', content: description });
-      meta.updateTag({ property: 'og:title', content: `Czy pada w mieście ${cityName}?` });
+      meta.updateTag({ property: 'og:title', content: `Czy padało w mieście ${cityName}?` });
       meta.updateTag({ property: 'og:description', content: description });
       meta.updateTag({ property: 'og:image', content: imageUrl });
       meta.updateTag({ property: 'og:image:width', content: '1200' });
