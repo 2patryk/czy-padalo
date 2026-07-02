@@ -133,3 +133,9 @@ Brief notes on Angular patterns used in this project, added as steps are complet
 - `precip6HoursSum`/`precip12HoursSum` exist in the real `/list/meteo` response (confirmed in PLAN.md's original sample) but were never added to the `Station` model in v1 since nothing used them — added now alongside the existing `precip24HoursSum`/`lastHourPrecip`/`dailyPrecip` fields, same `PrecipRangeSum | null` shape.
 - `RainReportService` maps each nullable field with the same `?? 0` fallback already used for the 24h `mm`, kept consistent rather than introducing a different null-handling convention per field.
 - Verified against live data (Gdynia) that all four new values are populated and distinct (lastHour 0mm, daily 0.8mm, 6h 0mm, 12h 0.1mm, 24h 0.8mm) — confirms these really are different time windows, not duplicates of the same number.
+
+## Step 32 — precipitation breakdown display
+
+- Rendered as a `<dl>` of `dt`/`dd` rows below a `border-top` separator — plain semantic markup rather than a table or grid, consistent with the e-ink "reading a page" feel rather than a dashboard widget.
+- Labeling `dailyMm` needed care: it's the IMGW "opad dobowy" (calendar-day sum, 06:00 UTC to 06:00 UTC), not a rolling 24h window — the rolling 24h figure is the `mm`/`precip24HoursSum` value already shown as the main verdict number above. Calling this row "Ostatnie 24h" would have made it look like a duplicate of the main figure despite holding a different value. Landed on "Ostatnia doba" per user preference, understanding it refers to that same fixed calendar-day window.
+- Rows are ordered shortest-to-longest window (godzina → 6h → 12h → doba) per user feedback — reads more naturally than the order the fields happened to be added to the model.

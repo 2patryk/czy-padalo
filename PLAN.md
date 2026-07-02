@@ -163,7 +163,7 @@ v1 is functionally complete but visually bare (unstyled, left-aligned, no dark m
 - [x] 29. Restyle `location-picker.component` (button, search input, results list) with the new design tokens.
 - [x] 30. Add a shared `precip-icon` component with no-precip/light/heavy variants driven by the 24h `mm` value (not `Station.statusCode` — see decisions log), wired into `rain-verdict.component`.
 - [x] 31. Extend `RainReport` model + `RainReportService` with `lastHourPrecip`, `dailyPrecip`, 6h and 12h sums.
-- [ ] 32. Display the precipitation breakdown (from step 31) in `rain-verdict.component`.
+- [x] 32. Display the precipitation breakdown (from step 31) in `rain-verdict.component`.
 - [ ] 33. Add `precip-history.component` rendering the last 24h hourly breakdown as a plain list, using the existing (currently unused) `ImgwApiService.getStationHistory`.
 - [ ] 34. Wire `precip-history.component` into `city-page.component` and the GPS/search result in `location-picker.component`.
 - [ ] 35. Verify dark mode end-to-end (both themes, every page/component) and check WCAG AA contrast + icon accessibility (ARIA labels).

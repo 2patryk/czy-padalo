@@ -19,6 +19,25 @@ import { toPrecipIconVariant } from '../../shared/utils/precip-icon-variant';
       @if (distanceKm(); as distanceKm) {
         <p class="verdict__distance">{{ distanceKm | number: '1.0-1' }} km od Ciebie</p>
       }
+
+      <dl class="verdict__breakdown">
+        <div class="verdict__breakdown-row">
+          <dt>Ostatnia godzina</dt>
+          <dd>{{ report().lastHourMm | mm }}</dd>
+        </div>
+        <div class="verdict__breakdown-row">
+          <dt>Ostatnie 6 godzin</dt>
+          <dd>{{ report().sixHourMm | mm }}</dd>
+        </div>
+        <div class="verdict__breakdown-row">
+          <dt>Ostatnie 12 godzin</dt>
+          <dd>{{ report().twelveHourMm | mm }}</dd>
+        </div>
+        <div class="verdict__breakdown-row">
+          <dt>Ostatnia doba</dt>
+          <dd>{{ report().dailyMm | mm }}</dd>
+        </div>
+      </dl>
     </div>
   `,
   styleUrl: './rain-verdict.component.scss',
