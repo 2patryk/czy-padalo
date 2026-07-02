@@ -2,12 +2,16 @@ import { Component, effect, inject, input } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { CITIES } from '../../core/data/cities';
 import { RainReport } from '../../core/models/rain-report.model';
+import { PrecipHistoryComponent } from '../precip-history/precip-history.component';
 import { RainVerdictComponent } from '../rain-verdict/rain-verdict.component';
 
 @Component({
   selector: 'app-city-page',
-  imports: [RainVerdictComponent],
-  template: ` <app-rain-verdict [report]="report()" /> `,
+  imports: [RainVerdictComponent, PrecipHistoryComponent],
+  template: `
+    <app-rain-verdict [report]="report()" />
+    <app-precip-history [stationCode]="report().stationCode" />
+  `,
 })
 export class CityPageComponent {
   readonly report = input.required<RainReport>();

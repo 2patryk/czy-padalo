@@ -5,6 +5,7 @@ import { RainReport } from '../../core/models/rain-report.model';
 import { GeolocationService } from '../../core/services/geolocation.service';
 import { RainReportService } from '../../core/services/rain-report.service';
 import { StationsService } from '../../core/services/stations.service';
+import { PrecipHistoryComponent } from '../precip-history/precip-history.component';
 import { RainVerdictComponent } from '../rain-verdict/rain-verdict.component';
 
 type LocationPickerStatus = 'idle' | 'loading' | 'error' | 'success';
@@ -26,7 +27,7 @@ const ERROR_MESSAGES: Record<LocationErrorKind, string> = {
 
 @Component({
   selector: 'app-location-picker',
-  imports: [RainVerdictComponent],
+  imports: [RainVerdictComponent, PrecipHistoryComponent],
   template: `
     <div class="location-picker">
       <button
@@ -84,6 +85,7 @@ const ERROR_MESSAGES: Record<LocationErrorKind, string> = {
         @case ('success') {
           @if (result(); as result) {
             <app-rain-verdict [report]="result.report" [distanceKm]="result.distanceKm" />
+            <app-precip-history [stationCode]="result.report.stationCode" />
           }
         }
       }
