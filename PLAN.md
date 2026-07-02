@@ -170,7 +170,7 @@ v1 is functionally complete but visually bare (unstyled, left-aligned, no dark m
 - [x] 34. Wire `precip-history.component` into `city-page.component` and the GPS/search result in `location-picker.component`.
 - [x] 35. Verify dark mode end-to-end (both themes, every page/component) and check WCAG AA contrast + icon accessibility (ARIA labels).
 - [x] 36. Add a custom favicon matching the app's precip-icon visual identity, replacing the default Angular favicon.
-- [ ] 37. Generate a per-city Open Graph image (`og:image`) for social sharing previews, wired into `city-page.component`'s `Meta` tags.
+- [x] 37. Generate a per-city Open Graph image (`og:image`) for social sharing previews, wired into `city-page.component`'s `Meta` tags.
 
 ## Risks (v2)
 
