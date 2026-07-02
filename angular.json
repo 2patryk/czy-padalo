@@ -34,7 +34,12 @@
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
-              "allowedHosts": ["czy-padalo.vercel.app", "*.patrykordons-projects.vercel.app"]
+              "allowedHosts": [
+                "czy-padalo.vercel.app",
+                "*.patrykordons-projects.vercel.app",
+                "czypadalo.pl",
+                "*.czypadalo.pl"
+              ]
             },
             "ssr": {
               "entry": "src/server.ts"
