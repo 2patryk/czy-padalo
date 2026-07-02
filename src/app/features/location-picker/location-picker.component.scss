@@ -5,6 +5,11 @@
   gap: var(--space-5);
   padding: var(--space-5) var(--space-4);
   text-align: center;
+
+  app-rain-verdict,
+  app-precip-history {
+    align-self: stretch;
+  }
 }
 
 .location-picker__gps-button {
